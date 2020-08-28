@@ -1,7 +1,15 @@
+from shopping_basket.shopping_basket_pricier import ShoppingPricier
+
 class ShoppingBasket():
-    def __init__(self):
+    def __init__(self, catalogue, offers=None):
         self.items = []
         self.item_quantity = 0
+        self.total = 0
+        self.sub_total = 0
+        self.discount = 0
+        self.pricier = ShoppingPricier()
+        self.catalogue = catalogue
+        self.offers = offers        
 
 
     def __update_item_count(self):
@@ -46,3 +54,10 @@ class ShoppingBasket():
                 if item_to_alter['quantity'] > 0:
                     self.items.append(item_to_alter)
                 self.__update_item_count()
+
+
+    def calculate(self):
+        r = self.pricier.calculate(self.items, self.catalogue, self.offers)
+        self.sub_total = r['sub_total']
+        self.total = r['total']
+        self.discount = r['discount']
