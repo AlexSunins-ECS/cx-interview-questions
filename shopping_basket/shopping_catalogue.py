@@ -8,12 +8,11 @@ class ShoppingCatalogue():
         self.item_quantity = len(self.items)
 
 
-    def add_item(self, item):
-        if isinstance(item, dict):
-            if all(k in item.keys() for k in ['name', 'price']):
-                if not item in self.items:
-                    self.items.append(item)
-                    self.__update_item_quantity()
+    def add_item(self, name, price):
+        item_to_add = {'name': name, 'price': price}
+        if not item_to_add in self.items:
+            self.items.append(item_to_add)
+            self.__update_item_quantity()
 
 
     def remove_item(self, item_name):
