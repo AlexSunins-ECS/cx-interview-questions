@@ -5,7 +5,7 @@ class ShoppingPricier():
 
 
     def calculate(self, basket, catalogue, offers=None):
-        if basket.item_quantity == 0:
+        if len(basket) == 0:
             return {'sub_total': 0, 'total': 0}
 
         if not basket:
@@ -17,7 +17,7 @@ class ShoppingPricier():
         self.total = 0
         self.sub_total = 0
 
-        for item in basket.items:
+        for item in basket:
             item_to_search = catalogue.search_item(item['name'])
 
             if item_to_search:
