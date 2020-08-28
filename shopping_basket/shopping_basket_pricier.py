@@ -19,6 +19,7 @@ class ShoppingPricier():
 
         for item in basket.items:
             item_to_search = catalogue.search_item(item['name'])
+
             if item_to_search:
                 # calculate raw price
                 self.sub_total += item_to_search['price'] * item['quantity']
@@ -26,25 +27,30 @@ class ShoppingPricier():
                 # apply offers
                 if offers:
                     item_is_on_offer = offers.search(item['name'])
+
                     if item_is_on_offer:
-                        # update quantity in basket
-                        new_basket_quantity = []
-                        current_quantity = item['quantity']
-                        offered_quantity = item_is_on_offer.offer_result
+                        if item_is_on_offer.type == 1: # this is buyXgetY
+                            # update quantity in basket
+                            new_basket_quantity = []
+                            current_quantity = item['quantity']
+                            offered_quantity = item_is_on_offer.offer_result
 
-                        while 1:
-                            if current_quantity > offered_quantity:
-                                new_basket_quantity.append(offered_quantity)
-                                current_quantity -= offered_quantity
-                            else:
-                                new_basket_quantity.append(current_quantity)
-                                break
+                            while 1:
+                                if current_quantity > offered_quantity:
+                                    new_basket_quantity.append(offered_quantity)
+                                    current_quantity -= offered_quantity
+                                else:
+                                    new_basket_quantity.append(current_quantity)
+                                    break
 
-                        for each_new_quantity in new_basket_quantity:
-                            if each_new_quantity == item_is_on_offer.offer_result:
-                                self.total += item_to_search['price'] * item_is_on_offer.base_condition
-                            else:
-                                self.total += each_new_quantity * item_to_search['price']
+                            for each_new_quantity in new_basket_quantity:
+                                if each_new_quantity == item_is_on_offer.offer_result:
+                                    self.total += item_to_search['price'] * item_is_on_offer.base_condition
+                                else:
+                                    self.total += each_new_quantity * item_to_search['price']
+
+                        elif item_is_on_offer.type == 2: # this is a discount
+                            self.total += item['quantity'] * item_is_on_offer.discounted_price(item_to_search['price'])
                     else:
                         self.total += item_to_search['price'] * item['quantity']
 
